@@ -1,3 +1,9 @@
+#!/usr/bin/python3
+# Description: Blockwars - A simple game written in Python. 
+# Usage: python3 blockwars.py
+# Author: Justin Oros
+# Source: https://github.com/JustinOros
+
 import pygame
 import random
 import time
