@@ -1,4 +1,4 @@
-### blockwars.py 
+### blockwars
 `A simple game where blue blocks kill red blocks written in Python.`
 ```
 Movement: W,A,S,D (Keyboard) or Direction-pad (Controller)
