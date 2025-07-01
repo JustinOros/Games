@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Description: Blockwars - A simple game written in Python. 
+# Description: blockwars - A simple game written in Python. 
 # Usage: python3 blockwars.py
 # Author: Justin Oros
 # Source: https://github.com/JustinOros
@@ -38,6 +38,7 @@ FIRE_SOUND = load_sound("player_fire_sound.wav")
 DIE_SOUND = load_sound("player_death_sound.wav")
 LEVEL_UP_SOUND = load_sound("level_up_sound.wav")
 ENEMY_DEATH_SOUND = load_sound("enemy_death_sound.wav")
+EXPLOSION_SOUND = load_sound("explosion_sound.wav")  # Explosion sound
 
 # Set font for score
 font = pygame.font.SysFont(None, 30)
@@ -109,7 +110,7 @@ class Projectile:
         self.y = y
         self.size = 5
         self.color = WHITE
-        self.speed = 10  # Increased bullet speed
+        self.speed = 15  # Bullet speed
         self.direction = direction
 
     def move(self):
@@ -124,6 +125,22 @@ class Projectile:
 
     def draw(self):
         pygame.draw.rect(screen, self.color, (self.x, self.y, self.size, self.size))
+
+
+# Explosion class
+class Explosion:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.size = 50
+        self.lifetime = 10  # How long the explosion lasts in frames
+
+    def draw(self):
+        pygame.draw.circle(screen, (255, 165, 0), (self.x, self.y), self.size)
+        self.lifetime -= 1
+
+    def is_alive(self):
+        return self.lifetime > 0
 
 
 # Enemy class
@@ -168,6 +185,7 @@ def game():
     clock = pygame.time.Clock()
     player = Player()
     projectiles = []
+    explosions = []  # List to hold active explosions
     level = 1
     score = 0
     enemies = [Enemy(2)]  # Enemies spawn a bit away from the player
@@ -237,12 +255,20 @@ def game():
             # Check if enemy is hit by projectile
             for projectile in projectiles[:]:
                 if pygame.Rect(enemy.x, enemy.y, enemy.size, enemy.size).colliderect(pygame.Rect(projectile.x, projectile.y, projectile.size, projectile.size)):
+                    # Create explosion
+                    explosions.append(Explosion(enemy.x + enemy.size // 2, enemy.y + enemy.size // 2))
+                    if ENEMY_DEATH_SOUND:
+                        ENEMY_DEATH_SOUND.play()  # Play enemy death sound
                     enemies.remove(enemy)
                     projectiles.remove(projectile)
                     score += 100
-                    if ENEMY_DEATH_SOUND:
-                        ENEMY_DEATH_SOUND.play()  # Play enemy death sound
                     break
+
+        # Handle explosions
+        for explosion in explosions[:]:
+            explosion.draw()
+            if not explosion.is_alive():
+                explosions.remove(explosion)
 
         # Level up
         if not enemies:
@@ -283,4 +309,3 @@ if __name__ == "__main__":
     game()
 
 pygame.quit()
-
