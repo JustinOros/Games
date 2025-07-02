@@ -3,5 +3,5 @@
 ```
 Movement: W,A,S,D (Keyboard) or Direction-pad (Controller)
 Fire: Spacebar (Keyboard) or Primary-Click (Mouse) or A-button (Controller)
-Exit: Esc to Quit
+Exit: Esc (Keyboard)
 ```
